@@ -1,0 +1,74 @@
+@import url(//db.onlinewebfonts.com/c/cc8ed42ce8b0cbe0f5d7e998c305520d?family=Khang);
+
+@font-face {
+    font-family: "Khang"; 
+    src: url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.eot"); 
+    src: url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.eot?#iefix") format("embedded-opentype"), 
+    url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.woff2") format("woff2"), 
+    url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.woff") format("woff"), 
+    url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.ttf") format("truetype"), 
+    url("//db.onlinewebfonts.com/t/cc8ed42ce8b0cbe0f5d7e998c305520d.svg#Khang") format("svg"); 
+}
+
+.dashboard {
+    margin: auto;
+    width: 75%;
+    padding: 10vh;
+    text-align: center;
+}
+
+.song-name {
+    //position: relative;
+    font-family: Khang;
+    font-size: 23px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 25%;
+}
+
+.artist {
+    font-family: Khang;
+    text-align: left;
+    padding-left: 25%;
+}
+
+.track-filters {
+    padding-top: 2%;
+}
+
+.top-tr-tb {
+    padding: 3%;
+    margin: 0 auto;
+    //border: 1px solid black;
+    border-collapse: separate;
+    border-spacing: 1.5em;
+}
+
+
+.user_pfp {
+    border-radius: 50%;
+}
+
+.album-cover {
+    max-width: 20%;
+    height: auto;
+    float: left;
+}
+
+.filter-buttons {
+    margin: 1% 1%;
+    font-weight: bold;
+    background-color: #44c767;
+    border-radius: 16px;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 17px 31px;
+    text-decoration: none;
+}
+
+.filter-buttons:hover{
+    background-color: #5cbf2a;
+}
+
