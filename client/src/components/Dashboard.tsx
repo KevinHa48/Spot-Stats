@@ -15,7 +15,9 @@ type ProfileTypes = {
     profile_pic: string;
     name: string;
     top_artist_img: string[];
+    current_filter: string;
     top_tracks: ObjType;
+    track_offset: number;
 }
 
 const Dashboard = ({status}:DashProps) => {
@@ -23,15 +25,16 @@ const Dashboard = ({status}:DashProps) => {
         profile_pic: '',
         name: '',
         top_artist_img: [],
-        top_tracks: {}
+        current_filter: '',
+        top_tracks: {},
+        track_offset: 0
     });
 
-    const getTracksFilter = ((filter: React.MouseEvent<HTMLButtonElement>) => {
+    const getTracksFilter = () => {
         // Target returns the reference to the element that triggered the event.
         // Note this is different from currentEvent
         // We also need to type filter.target as HTMLButtonElement as .target returns the EventTarget interface
-        let filter_range = (filter.target as HTMLButtonElement).value;
-        axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${filter_range}&limit=10`, {
+        axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=${profileData.current_filter}&limit=${profileData.track_offset}`, {
             headers: userInfoHeader(status)
         }).then(response => {
             setProfileData({
@@ -39,14 +42,23 @@ const Dashboard = ({status}:DashProps) => {
                 top_tracks: response.data
             });
         });
-    })
+    };
+
+    const handleFilter = (filter? : string, offset? : number) => {
+        setProfileData(prevState => ({
+            ...prevState,
+            current_filter: (filter) ? filter : prevState.current_filter,
+            track_offset: (offset) ? prevState.track_offset + offset : 10
+        }));
+    }
+
 
     useEffect(() => {
         const getUserData = axios.get('https://api.spotify.com/v1/me', {headers: profileHeader(status)});
         const getUserArtists = axios.get('https://api.spotify.com/v1/me/top/artists?limit=3',{
             headers: userInfoHeader(status)
         });
-        const getUserTracks = axios.get('https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=10',{
+        const getUserTracks = axios.get(`https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=10&offset=9`, {
             headers: userInfoHeader(status)
         });
 
@@ -59,6 +71,8 @@ const Dashboard = ({status}:DashProps) => {
                     top_artist_img: artists.data.items.map((artist: ObjType) => {
                         return artist.images[1].url;
                     }),
+                    current_filter: 'long-term',
+                    track_offset: 10,
                     // top_tracks: tracks.data.items.map((tracks: ObjType) => {
                     //     return tracks.album.images[1].url;
                     // })
@@ -67,6 +81,12 @@ const Dashboard = ({status}:DashProps) => {
             })
         );
     }, [status]);
+
+    useEffect(() => {
+        getTracksFilter();
+    }, [profileData.current_filter, profileData.track_offset])
+
+
     return (
        <div className = "dashboard">
             <img 
@@ -77,25 +97,23 @@ const Dashboard = ({status}:DashProps) => {
 
             <div className = "track-filters">
                 <button 
-                value = "short_term"
                 className = "filter-buttons"
-                onClick = {getTracksFilter}>Top Tracks (4 weeks)
+                onClick = {() => handleFilter("short_term")}>Top Tracks (4 weeks)
                 </button>
 
                 <button 
-                value = "medium_term"
                 className = "filter-buttons"
-                onClick = {getTracksFilter}>Top Tracks (6 months)
+                onClick = {() => handleFilter("medium_term")}>Top Tracks (6 months)
                 </button>
 
                 <button
-                value = "long_term"
                 className = "filter-buttons"
-                onClick = {getTracksFilter}>Top Tracks (All time)
+                onClick = {() => handleFilter("long_term")}>Top Tracks (All time)
                 </button>
 
             </div>
             <TrackTable filter = {profileData.top_tracks} />
+            <button onClick = {() => handleFilter(undefined, 10)}>Load more songs</button>
             {/* <h2>Here's your top Artists:</h2>
             {profileData.top_artist_img.map((img, index) => {
                 return <img key = {index} src = {img}></img>
